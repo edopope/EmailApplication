@@ -47,7 +47,7 @@ public class EmailServiceImpl implements EmailServices{
     @Override
     public void sendEmail(CreateEmailRequest createEmailRequest) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("godwin-semicolon@domain.io");
+        message.setFrom("ailenontorgodwin@gmail.com");
         message.setTo(createEmailRequest.getToWhom());
         message.setSubject(createEmailRequest.getTitle());
         message.setText(createEmailRequest.getBody());
