@@ -1,7 +1,7 @@
 package EmailApplication2.EmailApplication2.controllers;
 
 import EmailApplication2.EmailApplication2.Data.models.MyEmail;
-import EmailApplication2.EmailApplication2.Dtos.Request.CreateEmailRequest;
+import EmailApplication2.EmailApplication2.Dtos.Request.SendEmails;
 import EmailApplication2.EmailApplication2.Dtos.Response.MyEmailResponse;
 import EmailApplication2.EmailApplication2.services.EmailServices;
 import lombok.AllArgsConstructor;
@@ -20,8 +20,8 @@ public class MyEmailController {
 
         @PostMapping("/sendEmail")
         @ResponseStatus(HttpStatus.OK)
-        public String sendAMail(@RequestBody CreateEmailRequest createAMail){
-            emailServices.sendEmail(createAMail);
+        public String sendEmail(@RequestBody SendEmails sendEmails){
+            emailServices.sendMail(sendEmails);
             return "Email Sent!";
         }
 
@@ -48,7 +48,7 @@ public class MyEmailController {
         }
         @PostMapping("/createAndSaveToDraft")
     @ResponseStatus(HttpStatus.CREATED)
-    public String createAndSaveToDraft(@RequestBody CreateEmailRequest create){
+    public String createAndSaveToDraft(@RequestBody SendEmails create){
             emailServices.createAndSaveEmail(create);
             return "Email created and saved to draft";
         }

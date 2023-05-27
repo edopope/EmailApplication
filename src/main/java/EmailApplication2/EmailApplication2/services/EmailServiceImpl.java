@@ -3,31 +3,45 @@ package EmailApplication2.EmailApplication2.services;
 
 import EmailApplication2.EmailApplication2.Data.models.MyEmail;
 import EmailApplication2.EmailApplication2.Data.repositories.EmailRepo1;
-import EmailApplication2.EmailApplication2.Dtos.Request.CreateEmailRequest;
+
+import EmailApplication2.EmailApplication2.Dtos.Request.EmailNotificationRequest;
+import EmailApplication2.EmailApplication2.Dtos.Request.MailMessenger;
+import EmailApplication2.EmailApplication2.Dtos.Request.SendEmails;
 import EmailApplication2.EmailApplication2.Dtos.Response.MyEmailResponse;
+import EmailApplication2.EmailApplication2.mailConfig.MailConfig;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.stereotype.Service;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class EmailServiceImpl implements EmailServices{
    @Autowired
     private EmailRepo1 emailRepo1;
-    @Autowired
-   private JavaMailSender javaMailSender;
+   @Autowired
+private final MailConfig mailConfig;
+
+
+//   private JavaMailSender javaMailSender;
     @Override
-    public void createAndSaveEmail(CreateEmailRequest createEmailRequest) {
+    public void createAndSaveEmail(SendEmails sendEmails) {
        MyEmail myEmail = MyEmail.builder()
-               .emailBody(createEmailRequest.getBody())
-               .emailTitle(createEmailRequest.getTitle())
+               .emailBody(sendEmails.getMessage())
+               .emailTitle(sendEmails.getTopic())
                .build();
-       myEmail = emailRepo1.save(myEmail);
+        emailRepo1.save(myEmail);
     }
 
     @Override
@@ -44,15 +58,6 @@ public class EmailServiceImpl implements EmailServices{
         emailRepo1.delete(emailRepo1.findEmailByEmailTitle(title));
     }
 
-    @Override
-    public void sendEmail(CreateEmailRequest createEmailRequest) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("ailenontorgodwin@gmail.com");
-        message.setTo(createEmailRequest.getToWhom());
-        message.setSubject(createEmailRequest.getTitle());
-        message.setText(createEmailRequest.getBody());
-        javaMailSender.send(message);
-    }
 
     public List<MyEmailResponse> getAllEmails () {
         List<MyEmail> myMyEmails = emailRepo1.findAll();
@@ -64,6 +69,30 @@ public class EmailServiceImpl implements EmailServices{
                 .body(myEmails.getEmailBody())
                 .title(myEmails.getEmailTitle())
                 .build();
+    }
+
+    public String sendHtmlMail(EmailNotificationRequest request) {
+        RestTemplate restTemplates = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("api-key", mailConfig.getApiKey());
+        HttpEntity<EmailNotificationRequest> requestEntity = new HttpEntity<>(request, headers);
+
+        ResponseEntity<String> response =
+                restTemplates.postForEntity(mailConfig.getMailUrl(), requestEntity, String.class);
+        log.info("res->{}", response);
+        return response.getBody();
+    }
+
+
+
+
+    public String sendMail(SendEmails sendEmails) {
+        EmailNotificationRequest request = EmailNotificationRequest.builder()
+                .to(List.of(new MailMessenger(sendEmails.getEmailUrl())))
+                .htmlContent(String.format(sendEmails.getTopic(),sendEmails.getMessage()))
+                .build();
+        return sendHtmlMail(request);
     }
     }
 

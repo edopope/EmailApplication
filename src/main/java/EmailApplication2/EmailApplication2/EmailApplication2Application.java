@@ -1,6 +1,6 @@
 package EmailApplication2.EmailApplication2;
 
-import EmailApplication2.EmailApplication2.Dtos.Request.CreateEmailRequest;
+
 import EmailApplication2.EmailApplication2.services.EmailServices;
 import jakarta.mail.PasswordAuthentication;
 import jakarta.mail.Session;
@@ -20,20 +20,7 @@ public class EmailApplication2Application {
 
 
 	public static void main(String[] args) {
-		ConfigurableApplicationContext applicationContext = SpringApplication.run(EmailApplication2Application.class, args);
-
-//		EmailServices emailServices	= applicationContext.getBean(EmailServices.class);
-//		CreateEmailRequest createEmailRequest = CreateEmailRequest.builder()
-//				.toWhom("mediconnect247@gmail.com")
-//				.body("howfar")
-//				.title("nigga")
-//				.build();
-//		emailServices.sendEmail(createEmailRequest);
-//
-//	}
-
-
-// create and send email message using Spring Framework's JavaMailSender
+		 SpringApplication.run(EmailApplication2Application.class, args);
 
 
 	}
