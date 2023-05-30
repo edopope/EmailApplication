@@ -1,4 +1,4 @@
-package EmailApplication2.EmailApplication2.Dtos.Response;
+package EmailApplication2.EmailApplication2.Dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,17 +1,20 @@
 package EmailApplication2.EmailApplication2.controllers;
 
-import EmailApplication2.EmailApplication2.Data.models.MyEmail;
-import EmailApplication2.EmailApplication2.Dtos.Request.SendEmails;
-import EmailApplication2.EmailApplication2.Dtos.Response.MyEmailResponse;
+
+
+import EmailApplication2.EmailApplication2.Dtos.MyEmailResponse;
+import EmailApplication2.EmailApplication2.Dtos.request.SendEmails;
 import EmailApplication2.EmailApplication2.services.EmailServices;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+
+
 import java.util.List;
 
 @RestController
-@RequestMapping("/email/create1")
+@RequestMapping("/email")
 @AllArgsConstructor
 public class MyEmailController {
 
@@ -20,8 +23,8 @@ public class MyEmailController {
 
         @PostMapping("/sendEmail")
         @ResponseStatus(HttpStatus.OK)
-        public String sendEmail(@RequestBody SendEmails sendEmails){
-            emailServices.sendMail(sendEmails);
+        public String sendEmail(@RequestBody SendEmails sendEmails1){
+            emailServices.sendMail(sendEmails1);
             return "Email Sent!";
         }
 

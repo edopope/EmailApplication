@@ -2,15 +2,14 @@ package EmailApplication2.EmailApplication2.services;
 
 import EmailApplication2.EmailApplication2.Data.models.MyUsers;
 import EmailApplication2.EmailApplication2.Data.repositories.UserRepo1;
-import EmailApplication2.EmailApplication2.Dtos.Request.CreateUserRequests;
-import EmailApplication2.EmailApplication2.Dtos.Response.UserResponses;
+import EmailApplication2.EmailApplication2.Dtos.UserResponses;
+import EmailApplication2.EmailApplication2.Dtos.request.CreateUserRequest;
 import EmailApplication2.EmailApplication2.exceptions.LoginExceptionForUsers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,7 +21,7 @@ public class UserServicesImpl implements UserServices{
 
 
 
-    public void createAndSaveUser(CreateUserRequests user){
+    public void createAndSaveUser(CreateUserRequest user){
         ModelMapper mapper = new ModelMapper();
         MyUsers newMyUsers = MyUsers
                 .builder()
@@ -39,7 +38,7 @@ public class UserServicesImpl implements UserServices{
     }
 
     @Override
-    public MyUsers registerUser(CreateUserRequests user) throws LoginExceptionForUsers {
+    public MyUsers registerUser(CreateUserRequest user) throws LoginExceptionForUsers {
         MyUsers foundUser = userRepo1.findMyUsersByEmailUserName(user.getUsername());
         if (foundUser != null) throw new LoginExceptionForUsers("User already exists");
         MyUsers newMyUsers = MyUsers
@@ -56,7 +55,7 @@ public class UserServicesImpl implements UserServices{
 
 
     @Override
-    public void loginUser(CreateUserRequests user) {
+    public void loginUser(CreateUserRequest user) {
         boolean canLogin = true;
 //if (user.getUsername() == userRepo1.findMyUsersByEmailUserName())
     }

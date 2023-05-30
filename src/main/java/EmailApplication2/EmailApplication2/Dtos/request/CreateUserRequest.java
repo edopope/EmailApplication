@@ -1,13 +1,13 @@
-package EmailApplication2.EmailApplication2.Dtos.Request;
+package EmailApplication2.EmailApplication2.Dtos.request;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Setter
-@Getter
+@Data
 @AllArgsConstructor
-public class CreateUserRequests {
+@NoArgsConstructor
+public class CreateUserRequest {
     private String firstName;
     private String lastName;
     private String username;

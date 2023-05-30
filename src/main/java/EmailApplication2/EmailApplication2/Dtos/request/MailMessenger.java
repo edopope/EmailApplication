@@ -1,4 +1,4 @@
-package EmailApplication2.EmailApplication2.Dtos.Request;
+package EmailApplication2.EmailApplication2.Dtos.request;
 
 import lombok.*;
 
@@ -9,5 +9,7 @@ import lombok.*;
 @Setter
 @Builder
 public class MailMessenger {
-        private String email;
+    private String name;
+
+    private String email;
 }

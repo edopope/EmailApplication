@@ -2,8 +2,6 @@ package EmailApplication2.EmailApplication2;
 
 
 import EmailApplication2.EmailApplication2.services.EmailServices;
-import jakarta.mail.PasswordAuthentication;
-import jakarta.mail.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

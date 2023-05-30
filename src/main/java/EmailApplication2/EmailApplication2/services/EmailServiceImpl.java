@@ -4,10 +4,10 @@ package EmailApplication2.EmailApplication2.services;
 import EmailApplication2.EmailApplication2.Data.models.MyEmail;
 import EmailApplication2.EmailApplication2.Data.repositories.EmailRepo1;
 
-import EmailApplication2.EmailApplication2.Dtos.Request.EmailNotificationRequest;
-import EmailApplication2.EmailApplication2.Dtos.Request.MailMessenger;
-import EmailApplication2.EmailApplication2.Dtos.Request.SendEmails;
-import EmailApplication2.EmailApplication2.Dtos.Response.MyEmailResponse;
+import EmailApplication2.EmailApplication2.Dtos.MyEmailResponse;
+import EmailApplication2.EmailApplication2.Dtos.request.EmailNotificationRequest;
+import EmailApplication2.EmailApplication2.Dtos.request.MailMessenger;
+import EmailApplication2.EmailApplication2.Dtos.request.SendEmails;
 import EmailApplication2.EmailApplication2.mailConfig.MailConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,10 +17,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.stereotype.Service;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.client.RestTemplate;
+import sibModel.SendEmail;
 
 import java.util.List;
 
@@ -36,10 +34,10 @@ private final MailConfig mailConfig;
 
 //   private JavaMailSender javaMailSender;
     @Override
-    public void createAndSaveEmail(SendEmails sendEmails) {
+    public void createAndSaveEmail(SendEmails sendEmails1) {
        MyEmail myEmail = MyEmail.builder()
-               .emailBody(sendEmails.getMessage())
-               .emailTitle(sendEmails.getTopic())
+               .emailBody(sendEmails1.getMessage())
+               .emailTitle(sendEmails1.getTopic())
                .build();
         emailRepo1.save(myEmail);
     }
@@ -71,28 +69,30 @@ private final MailConfig mailConfig;
                 .build();
     }
 
-    public String sendHtmlMail(EmailNotificationRequest request) {
-        RestTemplate restTemplates = new RestTemplate();
+    @Override
+    public String sendHtmlMail(EmailNotificationRequest request)  {
+        RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("api-key", mailConfig.getApiKey());
         HttpEntity<EmailNotificationRequest> requestEntity = new HttpEntity<>(request, headers);
 
         ResponseEntity<String> response =
-                restTemplates.postForEntity(mailConfig.getMailUrl(), requestEntity, String.class);
+                restTemplate.postForEntity(mailConfig.getMailUrl(), requestEntity, String.class);
         log.info("res->{}", response);
         return response.getBody();
     }
 
-
-
-
+    @Override
     public String sendMail(SendEmails sendEmails) {
+        String message = sendEmails.getMessage();
         EmailNotificationRequest request = EmailNotificationRequest.builder()
-                .to(List.of(new MailMessenger(sendEmails.getEmailUrl())))
-                .htmlContent(String.format(sendEmails.getTopic(),sendEmails.getMessage()))
+                .sender(new MailMessenger(sendEmails.getSenderName(),sendEmails.getSenderEmail()))
+                .to(List.of(new MailMessenger(sendEmails.getFirstName(),sendEmails.getEmailUrl())))
+                .htmlContent(String.format(message,sendEmails.getFirstName()))
                 .build();
         return sendHtmlMail(request);
     }
+
     }
 

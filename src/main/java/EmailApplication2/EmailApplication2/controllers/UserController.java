@@ -1,12 +1,11 @@
 package EmailApplication2.EmailApplication2.controllers;
 
 import EmailApplication2.EmailApplication2.Data.models.MyUsers;
-import EmailApplication2.EmailApplication2.Dtos.Request.CreateUserRequests;
-import EmailApplication2.EmailApplication2.Dtos.Response.UserResponses;
+import EmailApplication2.EmailApplication2.Dtos.UserResponses;
+import EmailApplication2.EmailApplication2.Dtos.request.CreateUserRequest;
 import EmailApplication2.EmailApplication2.exceptions.LoginExceptionForUsers;
 import EmailApplication2.EmailApplication2.services.UserServices;
 import lombok.AllArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +21,7 @@ public class UserController {
 
     @PostMapping("/createUser")
 @ResponseStatus(HttpStatus.CREATED)
-    public String registerUsers(@RequestBody CreateUserRequests registerUsers) throws LoginExceptionForUsers {
+    public String registerUsers(@RequestBody CreateUserRequest registerUsers) throws LoginExceptionForUsers {
          try {
              userServices.registerUser(registerUsers);
          }
